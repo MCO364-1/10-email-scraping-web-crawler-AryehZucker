@@ -46,11 +46,11 @@ public class WebContentScraper implements Runnable {
     public void run() {
         try {
             content = website.getContent();
+            extractLinks();
+            extractEmails();
         } catch (IOException e) {
             logger.warning("Failed to fetch content from " + website);
         }
-        extractLinks();
-        extractEmails();
     }
 
     /**
@@ -59,7 +59,13 @@ public class WebContentScraper implements Runnable {
     private void extractEmails() {
         Matcher matcher = emailPattern.matcher(content.outerHtml());
         while (matcher.find()) {
-            emails.add(matcher.group().toLowerCase());
+            String email = matcher.group().toLowerCase();
+            int emailNumber;
+            synchronized (emails) {
+                emails.add(email);
+                emailNumber = emails.size();
+            }
+            logger.info(String.format("Found email #%d: %s", emailNumber, email));
         }
     }
 
