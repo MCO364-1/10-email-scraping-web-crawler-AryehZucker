@@ -80,4 +80,17 @@ public class WebContentScraperTest {
         scraper.run();
     }
 
+    /**
+     * Test that the scraper can connect to a real website and scrape a link
+     * 
+     * @throws InterruptedException if interrupted while accessing the queue
+     */
+    @Test
+    @Timeout(value = 10, unit = TimeUnit.SECONDS)
+    void testRealWebsite() throws InterruptedException {
+        WebContentScraper scraper = new WebContentScraper(new WebsiteImp("https://example.com"), emails, links);
+        scraper.run();
+        assertEquals("https://www.iana.org/domains/example", links.take());
+    }
+
 }
