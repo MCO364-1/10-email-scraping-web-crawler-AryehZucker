@@ -10,6 +10,9 @@ public class WebContentScraper implements Runnable {
     private static final Pattern emailPattern = Pattern.compile(
             "[a-z0-9][a-z0-9_\\.-]*(\\+[a-z0-9_\\.-]+)?@([a-z0-9-]+\\.)+[a-z0-9]+",
             Pattern.CASE_INSENSITIVE);
+    private static final Pattern linkPattern = Pattern.compile(
+            "<a.*href=\"([^\"]*)\".*<\\/a>",
+            Pattern.CASE_INSENSITIVE);
 
     private final Website website;
     private final Set<String> emails;
@@ -38,6 +41,7 @@ public class WebContentScraper implements Runnable {
     @Override
     public void run() {
         content = website.getContent();
+        extractLinks();
         extractEmails();
     }
 
@@ -48,6 +52,16 @@ public class WebContentScraper implements Runnable {
         Matcher matcher = emailPattern.matcher(content);
         while (matcher.find()) {
             emails.add(matcher.group().toLowerCase());
+        }
+    }
+
+    /**
+     * Extract all of the links from the website and put them onto the links queue
+     */
+    private void extractLinks() {
+        Matcher matcher = linkPattern.matcher(content);
+        while (matcher.find()) {
+            links.add(matcher.group(1));
         }
     }
 

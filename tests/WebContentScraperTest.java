@@ -2,8 +2,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -55,6 +57,21 @@ public class WebContentScraperTest {
         scrape(email1 + " " + email2);
         assertTrue(emails.contains(email1));
         assertTrue(emails.contains(email2));
+    }
+
+    /**
+     * Test that the scraper extracts links
+     * 
+     * @throws InterruptedException if interrupted while accessing the queue
+     */
+    @Test
+    @Timeout(value = 5, unit = TimeUnit.SECONDS)
+    void testExtractLink() throws InterruptedException {
+        String link = "example.com";
+        String content = "sample text... <a other=\"attributes\" href=\"" + link
+                + "\" and-more=\"attributes\">some content</a> rest of page...";
+        scrape(content);
+        assertEquals(link, links.take());
     }
 
     private void scrape(String content) {
