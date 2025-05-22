@@ -1,23 +1,27 @@
+import java.io.IOException;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  * Scraper for extracting emails and links from a website
  */
 public class WebContentScraper implements Runnable {
 
+    private static final Logger logger = Logger.getLogger(WebContentScraper.class.getName());
     private static final Pattern emailPattern = Pattern.compile(
             "[a-z0-9][a-z0-9_\\.-]*(\\+[a-z0-9_\\.-]+)?@([a-z0-9-]+\\.)+[a-z0-9]+",
-            Pattern.CASE_INSENSITIVE);
-    private static final Pattern linkPattern = Pattern.compile(
-            "<a.*href=\"([^\"]*)\".*<\\/a>",
             Pattern.CASE_INSENSITIVE);
 
     private final Website website;
     private final Set<String> emails;
     private final UniqueBlockingQueue<String> links;
-    private String content;
+    private Document content;
 
     /**
      * Construct this {@code WebContentScraper} for a given website
@@ -40,7 +44,11 @@ public class WebContentScraper implements Runnable {
      */
     @Override
     public void run() {
-        content = website.getContent();
+        try {
+            content = website.getContent();
+        } catch (IOException e) {
+            logger.warning("Failed to fetch content from " + website);
+        }
         extractLinks();
         extractEmails();
     }
@@ -49,7 +57,7 @@ public class WebContentScraper implements Runnable {
      * Extract all of the emails from the website and put them into the emails set
      */
     private void extractEmails() {
-        Matcher matcher = emailPattern.matcher(content);
+        Matcher matcher = emailPattern.matcher(content.outerHtml());
         while (matcher.find()) {
             emails.add(matcher.group().toLowerCase());
         }
@@ -59,9 +67,9 @@ public class WebContentScraper implements Runnable {
      * Extract all of the links from the website and put them onto the links queue
      */
     private void extractLinks() {
-        Matcher matcher = linkPattern.matcher(content);
-        while (matcher.find()) {
-            links.add(matcher.group(1));
+        Elements linkElements = content.getElementsByTag("a");
+        for (Element linkElement : linkElements) {
+            links.add(linkElement.absUrl("href"));
         }
     }
 

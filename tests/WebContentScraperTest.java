@@ -67,7 +67,7 @@ public class WebContentScraperTest {
     @Test
     @Timeout(value = 5, unit = TimeUnit.SECONDS)
     void testExtractLink() throws InterruptedException {
-        String link = "example.com";
+        String link = "https://example.com";
         String content = "sample text... <a other=\"attributes\" href=\"" + link
                 + "\" and-more=\"attributes\">some content</a> rest of page...";
         scrape(content);

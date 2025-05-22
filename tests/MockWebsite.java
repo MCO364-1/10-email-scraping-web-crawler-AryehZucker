@@ -1,3 +1,6 @@
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 /**
  * A mock implementation of a {@code Website} to be used for tests
  */
@@ -20,8 +23,18 @@ public class MockWebsite implements Website {
      * @return the content of this site
      */
     @Override
-    public String getContent() {
-        return content;
+    public Document getContent() {
+        return Jsoup.parse(content);
     }
-    
+
+    /**
+     * Get a String representing what this Object is
+     * 
+     * @return the String "Mock Website"
+     */
+    @Override
+    public String toString() {
+        return "Mock Website";
+    }
+
 }
