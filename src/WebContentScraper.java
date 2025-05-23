@@ -62,10 +62,15 @@ public class WebContentScraper implements Runnable {
             String email = matcher.group().toLowerCase();
             int emailNumber;
             synchronized (emails) {
-                emails.add(email);
-                emailNumber = emails.size();
+                if (emails.add(email)){
+                    emailNumber = emails.size();
+                } else {
+                    emailNumber = 0;
+                }
             }
-            logger.info(String.format("Found email #%d: %s", emailNumber, email));
+            if (emailNumber != 0) {
+                logger.info(String.format("Found email #%d: %s", emailNumber, email));
+            }
         }
     }
 
