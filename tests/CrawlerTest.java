@@ -11,11 +11,13 @@ public class CrawlerTest {
 
     /**
      * Test a {@code Crawler} with its typical use
+     * 
+     * @throws InterruptedException if the crawler is interrupted
      */
     @Test
-    void testCrawler() {
+    void testCrawler() throws InterruptedException {
         Crawler crawler = new Crawler("https://example.com");
-        Set<String> emails = crawler.findEmails(1);
+        Set<String> emails = crawler.findEmails(5);
         assertTrue(emails.contains("dee3@us.ibm.com"));
     }
 
