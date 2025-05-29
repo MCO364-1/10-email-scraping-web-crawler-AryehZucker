@@ -3,6 +3,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 import persistence.Email;
 import scraper.WebContentScraper;
@@ -13,6 +14,8 @@ import util.UniqueBlockingQueue;
  * A web crawler for finding email addresses
  */
 public class Crawler {
+
+    private static final Logger logger = Logger.getLogger(Crawler.class.getName());
 
     private UniqueBlockingQueue<String> links = new UniqueBlockingQueue<>();
     private Set<Email> emails = Collections.synchronizedSet(new HashSet<>());
@@ -38,6 +41,7 @@ public class Crawler {
         try (ExecutorService executor = Executors.newFixedThreadPool(threadCount)) {
             while (emails.size() < n) {
                 String nextLink = links.take();
+                logger.fine("Queueing site for scraping: " + nextLink);
                 executor.submit(new WebContentScraper(new WebsiteImp(nextLink), emails, links));
             }
             executor.shutdownNow();
