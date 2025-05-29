@@ -28,6 +28,16 @@ public class MockWebsite implements Website {
     }
 
     /**
+     * Get the URL of this {@code Website}
+     * 
+     * @return {@code null} for this mock implementation
+     */
+    @Override
+    public String getURL() {
+        return null;
+    }
+
+    /**
      * Get a String representing what this Object is
      * 
      * @return the String "Mock Website"

@@ -8,6 +8,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import persistence.Email;
+
 /**
  * Scraper for extracting emails and links from a website
  */
@@ -19,7 +21,7 @@ public class WebContentScraper implements Runnable {
             Pattern.CASE_INSENSITIVE);
 
     private final Website website;
-    private final Set<String> emails;
+    private final Set<Email> emails;
     private final UniqueBlockingQueue<String> links;
     private Document content;
 
@@ -32,7 +34,7 @@ public class WebContentScraper implements Runnable {
      */
     public WebContentScraper(
             Website website,
-            Set<String> emails,
+            Set<Email> emails,
             UniqueBlockingQueue<String> links) {
         this.website = website;
         this.emails = emails;
@@ -59,7 +61,7 @@ public class WebContentScraper implements Runnable {
     private void extractEmails() {
         Matcher matcher = emailPattern.matcher(content.outerHtml());
         while (matcher.find()) {
-            String email = matcher.group().toLowerCase();
+            Email email = new Email(matcher.group(), website.getURL());
             int emailNumber;
             synchronized (emails) {
                 if (emails.add(email)){

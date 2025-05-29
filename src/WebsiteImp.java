@@ -46,4 +46,14 @@ public class WebsiteImp implements Website {
         return url;
     }
 
+    /**
+     * Get the URL of this {@code Website}
+     * 
+     * @return the URL as a {@code String}
+     */
+    @Override
+    public String getURL() {
+        return url;
+    }
+
 }

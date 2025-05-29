@@ -9,9 +9,11 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import persistence.Email;
+
 public class WebContentScraperTest {
 
-    Set<String> emails = new HashSet<>();
+    Set<Email> emails = new HashSet<>();
     UniqueBlockingQueue<String> links = new UniqueBlockingQueue<>();
 
     /**
@@ -21,7 +23,7 @@ public class WebContentScraperTest {
     @ValueSource(strings = { "foo_37.bar@website.org", "foo37+bar@website.org", "foo37@web-site.org" })
     void testExtractBasicEmail(String email) {
         scrape(email);
-        assertTrue(emails.contains(email));
+        assertEmailsContains(email);
     }
 
     /**
@@ -33,7 +35,7 @@ public class WebContentScraperTest {
         String content = "context \"" + email + ",context";
         scrape(content);
         assertEquals(1, emails.size());
-        assertTrue(emails.contains(email));
+        assertEmailsContains(email);
     }
 
     /**
@@ -44,7 +46,7 @@ public class WebContentScraperTest {
             "foo37website.org", "foo37@website.o-rg" })
     void testNotExtractBadEmail(String email) {
         scrape(email);
-        assertFalse(emails.contains(email));
+        assertFalse(emails.contains(new Email(email, null)));
     }
 
     /**
@@ -55,8 +57,17 @@ public class WebContentScraperTest {
         String email1 = "foo37@website.org",
                 email2 = "joedoe@example.co";
         scrape(email1 + " " + email2);
-        assertTrue(emails.contains(email1));
-        assertTrue(emails.contains(email2));
+        assertEmailsContains(email1);
+        assertEmailsContains(email2);
+    }
+
+    /**
+     * Assert that the emails set contains the given email
+     * 
+     * @param email the email that should be in the set
+     */
+    private void assertEmailsContains(String email) {
+        assertTrue(emails.contains(new Email(email, null)));
     }
 
     /**

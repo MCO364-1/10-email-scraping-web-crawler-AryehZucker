@@ -15,4 +15,11 @@ public interface Website {
      */
     Document getContent() throws IOException;
 
+    /**
+     * Get the URL of this {@code Website}
+     * 
+     * @return the URL as a {@code String}
+     */
+    String getURL();
+
 }

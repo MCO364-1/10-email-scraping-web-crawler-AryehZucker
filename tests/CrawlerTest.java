@@ -4,6 +4,8 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import persistence.Email;
+
 /**
  * Tests for the {@code Crawler} class
  */
@@ -17,8 +19,8 @@ public class CrawlerTest {
     @Test
     void testCrawler() throws InterruptedException {
         Crawler crawler = new Crawler("https://example.com");
-        Set<String> emails = crawler.findEmails(5);
-        assertTrue(emails.contains("dee3@us.ibm.com"));
+        Set<Email> emails = crawler.findEmails(5);
+        assertTrue(emails.contains(new Email("dee3@us.ibm.com", null)));
     }
 
 }
