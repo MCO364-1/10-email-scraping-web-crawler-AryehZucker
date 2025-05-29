@@ -1,3 +1,5 @@
+package scraper;
+
 import java.io.IOException;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -9,6 +11,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import persistence.Email;
+import util.UniqueBlockingQueue;
 
 /**
  * Scraper for extracting emails and links from a website

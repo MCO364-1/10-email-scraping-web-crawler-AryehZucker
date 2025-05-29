@@ -1,3 +1,5 @@
+package scraper;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashSet;
@@ -10,6 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import persistence.Email;
+import util.UniqueBlockingQueue;
 
 public class WebContentScraperTest {
 

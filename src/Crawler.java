@@ -5,6 +5,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import persistence.Email;
+import scraper.WebContentScraper;
+import scraper.WebsiteImp;
+import util.UniqueBlockingQueue;
 
 /**
  * A web crawler for finding email addresses
