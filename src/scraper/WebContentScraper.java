@@ -74,7 +74,7 @@ public class WebContentScraper implements Runnable {
                 }
             }
             if (emailNumber != 0) {
-                logger.info(String.format("Found email #%d: %s", emailNumber, email));
+                logger.info(String.format("Found email #%d: %s", emailNumber, email.getEmailAddress()));
             }
         }
     }
