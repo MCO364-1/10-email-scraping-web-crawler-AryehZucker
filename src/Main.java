@@ -1,4 +1,9 @@
+import java.sql.SQLException;
+import java.util.Set;
 import java.util.logging.Logger;
+
+import persistence.Database;
+import persistence.Email;
 
 public class Main {
 
@@ -10,6 +15,13 @@ public class Main {
         Crawler crawler = new Crawler(startingAddress);
         logger.fine("Beginning web crawl from: " + startingAddress);
         logger.fine("Crawling until " + numOfEmailsToCollect + " emails are found");
-        crawler.findEmails(numOfEmailsToCollect);
+        Set<Email> emails = crawler.findEmails(numOfEmailsToCollect);
+
+        try (Database database = new Database()) {
+            database.persistEmails(emails);
+            logger.info("Successfully persisted emails to the database");
+        } catch (SQLException e) {
+            logger.severe("Error persisting emails to the database: " + e.getMessage());
+        }
     }
 }
