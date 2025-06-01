@@ -5,12 +5,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * A database for saving {@code Email}s
  */
 public class Database implements AutoCloseable {
 
+    private static final Logger logger = Logger.getLogger(Database.class.getName());
     private static final String CONNECTION_URL = "jdbc:sqlserver://"
             + System.getenv("DB_SERVER") + ";"
             + "database=" + System.getenv("DB_DATABASE") + ";"
@@ -36,13 +38,18 @@ public class Database implements AutoCloseable {
      * @throws SQLException if there is an issue saving the emails to the database
      */
     public void persistEmails(Set<Email> emails) throws SQLException {
+        logger.info("Persisting " + emails.size() + " emails");
         try (PreparedStatement insertStatement = connection.prepareStatement(
                 "INSERT INTO Emails (EmailAddress, Source, TimeStamp) VALUES (?, ?, ?)")) {
             for (Email email : emails) {
                 insertStatement.setString(1, email.getEmailAddress());
                 insertStatement.setString(2, email.getSource());
                 insertStatement.setString(3, email.getTimeStamp().toString());
-                insertStatement.executeUpdate();
+                try {
+                    insertStatement.executeUpdate();
+                } catch (SQLException e) {
+                    logger.warning(e.getMessage());
+                }
             }
         }
     }
