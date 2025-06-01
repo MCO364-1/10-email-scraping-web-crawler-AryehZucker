@@ -46,7 +46,7 @@ public class WebContentScraperTest {
      */
     @ParameterizedTest
     @ValueSource(strings = { ".foo37@website.org", "_foo37@website.org", "-foo37@website.org", "foo37@org",
-            "foo37website.org", "foo37@website.o-rg" })
+            "foo37website.org", "foo37@website.o-rg", ".foo37@website.foo" })
     void testNotExtractBadEmail(String email) {
         scrape(email);
         assertFalse(emails.contains(new Email(email, null)));

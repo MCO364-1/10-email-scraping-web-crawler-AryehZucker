@@ -20,7 +20,7 @@ public class WebContentScraper implements Runnable {
 
     private static final Logger logger = Logger.getLogger(WebContentScraper.class.getName());
     private static final Pattern emailPattern = Pattern.compile(
-            "[a-z0-9][a-z0-9_\\.-]*(\\+[a-z0-9_\\.-]+)?@([a-z0-9-]+\\.)+[a-z0-9]+",
+            "[a-z0-9][a-z0-9_\\.-]*(\\+[a-z0-9_\\.-]+)?@([a-z0-9-]+\\.)+(com|org|edu|net|gov|co|us)",
             Pattern.CASE_INSENSITIVE);
 
     private final Website website;
